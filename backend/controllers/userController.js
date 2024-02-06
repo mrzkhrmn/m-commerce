@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import { generateToken } from "../utils/generateToken.js";
 
 export const createUser = async (req, res) => {
   try {
@@ -20,6 +21,7 @@ export const createUser = async (req, res) => {
     const newUser = new User({ username, email, password: hashedPassword });
 
     await newUser.save();
+    generateToken(res, newUser._id);
 
     res.status(201).json({
       _id: newUser._id,
@@ -52,6 +54,37 @@ export const getAllUsers = async (req, res) => {
     if (!users) return res.status(404).json({ error: "Users not found" });
 
     res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error });
+    console.log(error);
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password)
+      return res.status(400).json({ error: "Fileds cannot be empty" });
+
+    const user = await User.findOne({ email });
+
+    if (!user)
+      return res.status(404).json({ error: "Cant find user with this email!" });
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid)
+      return res.status(400).json({ error: "Wrong password!" });
+
+    generateToken(res, user._id);
+
+    res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
   } catch (error) {
     res.status(500).json({ error: error });
     console.log(error);
