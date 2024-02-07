@@ -2,6 +2,7 @@ import express from "express";
 import {
   createUser,
   getAllUsers,
+  getCurrentUser,
   getUser,
   loginUser,
   logoutUser,
@@ -13,10 +14,11 @@ import {
 
 const router = express.Router();
 
-router.get(`/:id`, getUser);
-router.get(`/`, authenticate, authorizedAdmin, getAllUsers);
+router.route("/profile").get(authenticate, getCurrentUser);
 router.post(`/`, createUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
+router.get(`/:id`, authenticate, getUser);
+router.get(`/`, authenticate, authorizedAdmin, getAllUsers);
 
 export default router;

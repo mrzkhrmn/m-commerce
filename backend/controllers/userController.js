@@ -1,6 +1,8 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import { asyncHandler } from "../middlewares/asyncHandler.js";
+import mongoose from "mongoose";
 
 export const createUser = async (req, res) => {
   try {
@@ -40,7 +42,7 @@ export const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ error: "User not found" });
-
+    console.log(req.user._id.toString());
     res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ error: error });
@@ -48,11 +50,25 @@ export const getUser = async (req, res) => {
   }
 };
 
+export const getCurrentUser = async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found.");
+  }
+};
+
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
     if (!users) return res.status(404).json({ error: "Users not found" });
-
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ error: error });
