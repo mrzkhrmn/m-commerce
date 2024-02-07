@@ -1,9 +1,11 @@
 import jwt from "jsonwebtoken";
+import { asyncHandler } from "./asyncHandler.js";
+import User from "../models/userModel.js";
 
-export const authenticate = async (req, res, next) => {
+export const authenticate = asyncHandler(async (req, res, next) => {
   let token;
 
-  token = req.cookie.jwt;
+  token = req.cookies.jwt;
 
   if (token) {
     try {
@@ -12,13 +14,13 @@ export const authenticate = async (req, res, next) => {
       next();
     } catch (error) {
       res.status(401);
-      throw new Error("Not authorized, no token");
+      throw new Error("Not authorized, token failed.");
     }
   } else {
     res.status(401);
-    throw new Error("not authorized, no token");
+    throw new Error("Not authorized, no token");
   }
-};
+});
 
 export const authorizedAdmin = (req, res, next) => {
   if (req.user && req.user.isAdmin) {
