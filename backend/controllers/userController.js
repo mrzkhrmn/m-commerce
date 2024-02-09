@@ -145,3 +145,23 @@ export const updateUserProfile = async (req, res) => {
     console.log("Error in logoutUser: " + error.message);
   }
 };
+
+export const deleteUserProfileById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) res.status(404).json({ error: "User not found" });
+
+    if (user.isAdmin) {
+      return res.status(400).json({ error: "You cant delete admin user!" });
+    } else {
+      await User.deleteOne({ _id: user._id });
+      res.status(200).json({ message: "user deleted successfully!" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log("Error in logoutUser: " + error.message);
+  }
+};
