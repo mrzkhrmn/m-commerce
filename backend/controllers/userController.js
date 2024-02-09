@@ -1,8 +1,6 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
-import { asyncHandler } from "../middlewares/asyncHandler.js";
-import mongoose from "mongoose";
 
 export const createUser = async (req, res) => {
   try {
