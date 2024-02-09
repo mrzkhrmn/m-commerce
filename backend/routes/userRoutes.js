@@ -6,6 +6,7 @@ import {
   getUser,
   loginUser,
   logoutUser,
+  updateUserProfile,
 } from "../controllers/userController.js";
 import {
   authenticate,
@@ -20,5 +21,6 @@ router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.get(`/:id`, authenticate, getUser);
 router.get(`/`, authenticate, authorizedAdmin, getAllUsers);
+router.put("/profile", authenticate, updateUserProfile);
 
 export default router;
