@@ -4,10 +4,11 @@ import {
   deleteUserProfileById,
   getAllUsers,
   getCurrentUser,
-  getUser,
+  getUserById,
   loginUser,
   logoutUser,
-  updateUserProfile,
+  updateCurrentUserProfile,
+  updateUserProfileById,
 } from "../controllers/userController.js";
 import {
   authenticate,
@@ -20,9 +21,10 @@ router.route("/profile").get(authenticate, getCurrentUser);
 router.post(`/`, createUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
-router.get(`/:id`, authenticate, getUser);
+router.get(`/:id`, authenticate, authorizedAdmin, getUserById);
 router.get(`/`, authenticate, authorizedAdmin, getAllUsers);
-router.put("/profile", authenticate, updateUserProfile);
+router.put("/profile", authenticate, updateCurrentUserProfile);
+router.put("/:id", authenticate, authorizedAdmin, updateUserProfileById);
 router.delete("/:id", authenticate, authorizedAdmin, deleteUserProfileById);
 
 export default router;

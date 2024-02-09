@@ -38,7 +38,7 @@ export const createUser = async (req, res) => {
   }
 };
 
-export const getUser = async (req, res) => {
+export const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -117,7 +117,7 @@ export const logoutUser = async (req, res) => {
   }
 };
 
-export const updateUserProfile = async (req, res) => {
+export const updateCurrentUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
@@ -142,7 +142,38 @@ export const updateUserProfile = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
-    console.log("Error in logoutUser: " + error.message);
+    console.log("Error in updateCurrentUser: " + error.message);
+  }
+};
+
+export const updateUserProfileById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    if (!user) return res.status(404).json({ error: "User not found!" });
+
+    if (user.isAdmin)
+      return res
+        .status(400)
+        .json({ error: "You cannot update profile of admin" });
+
+    user.username = req.body.username || user.username;
+    user.email = req.body.email || user.email;
+    user.isAdmin = Boolean(req.body.isAdmin);
+
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log("Error in update user as admin: " + error.message);
   }
 };
 
