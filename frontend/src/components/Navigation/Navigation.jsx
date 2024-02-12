@@ -34,7 +34,7 @@ export const Navigation = () => {
           alignItems={"center"}
           gap={6}
         >
-          <RouterLink>
+          <RouterLink to={"/"}>
             <Text fontWeight={""} fontSize={"xl"}>
               Home
             </Text>
