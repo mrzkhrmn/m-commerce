@@ -5,6 +5,7 @@ import { HomePage } from "./pages/HomePage";
 import { AuthPage } from "./pages/AuthPage";
 import { useRecoilValue } from "recoil";
 import { userAtom } from "./atoms/userAtom";
+import { UpdateProfilePage } from "./pages/UpdateProfilePage";
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -17,6 +18,7 @@ function App() {
           path="/auth"
           element={user ? <Navigate to={"/"} /> : <AuthPage />}
         />
+        <Route path="/profile" element={<UpdateProfilePage />} />
       </Routes>
     </>
   );

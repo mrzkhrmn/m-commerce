@@ -28,6 +28,7 @@ export const createUser = async (req, res) => {
       username: newUser.username,
       email: newUser.email,
       password: newUser.password,
+      profilePic: newUser.profilePic,
       isAdmin: newUser.isAdmin,
     });
   } catch (error) {
@@ -56,6 +57,7 @@ export const getCurrentUser = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      profilePic: user.profilePic,
     });
   } else {
     res.status(404);
@@ -97,6 +99,7 @@ export const loginUser = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      profilePic: user.profilePic,
       isAdmin: user.isAdmin,
     });
   } catch (error) {
@@ -116,6 +119,8 @@ export const logoutUser = async (req, res) => {
 };
 
 export const updateCurrentUserProfile = async (req, res) => {
+  let { profilePic } = req.body;
+
   try {
     const user = await User.findById(req.user._id);
 
@@ -123,6 +128,7 @@ export const updateCurrentUserProfile = async (req, res) => {
 
     user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
+    user.profilePic = profilePic || user.profilePic;
 
     if (req.body.password) {
       const salt = await bcrypt.genSalt(10);
@@ -136,6 +142,7 @@ export const updateCurrentUserProfile = async (req, res) => {
       _id: updatedUser._id,
       username: updatedUser.username,
       email: updatedUser.email,
+      profilePic: updatedUser.profilePic,
       isAdmin: updatedUser.isAdmin,
     });
   } catch (error) {
@@ -145,6 +152,7 @@ export const updateCurrentUserProfile = async (req, res) => {
 };
 
 export const updateUserProfileById = async (req, res) => {
+  let { profilePic } = req.body;
   try {
     const { id } = req.params;
 
@@ -159,6 +167,7 @@ export const updateUserProfileById = async (req, res) => {
 
     user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
+    user.profilePic = profilePic || user.profilePic;
     user.isAdmin = Boolean(req.body.isAdmin);
 
     const updatedUser = await user.save();
@@ -167,11 +176,31 @@ export const updateUserProfileById = async (req, res) => {
       _id: updatedUser._id,
       username: updatedUser.username,
       email: updatedUser.email,
+      profilePic: updatedUser.profilePic,
       isAdmin: updatedUser.isAdmin,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
     console.log("Error in update user as admin: " + error.message);
+  }
+};
+
+export const deleteCurrentUserPofile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) res.status(404).json({ error: "User not found" });
+
+    if (user.isAdmin) {
+      return res.status(400).json({ error: "You cant delete admin user!" });
+    } else {
+      await User.deleteOne({ _id: user._id });
+      res.cookie("jwt", "", { maxAge: 1 });
+      res.status(200).json({ message: "user deleted successfully!" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+    console.log("Error in logoutUser: " + error.message);
   }
 };
 
@@ -187,6 +216,7 @@ export const deleteUserProfileById = async (req, res) => {
       return res.status(400).json({ error: "You cant delete admin user!" });
     } else {
       await User.deleteOne({ _id: user._id });
+      res.cookie("jwt", "", { maxAge: 1 });
       res.status(200).json({ message: "user deleted successfully!" });
     }
   } catch (error) {
