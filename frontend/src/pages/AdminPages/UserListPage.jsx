@@ -11,10 +11,12 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { UserListItem } from "../../components/UserListPage/UserListItem";
+import { useRecoilState } from "recoil";
+import { allUsersAtom } from "../../atoms/allUsersAtom";
 
 export const UserListPage = () => {
   const [loading, setLoading] = useState(false);
-  const [userList, setUserList] = useState([]);
+  const [userList, setUserList] = useRecoilState(allUsersAtom);
 
   useEffect(() => {
     setLoading(true);
