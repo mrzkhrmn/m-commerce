@@ -7,6 +7,7 @@ import { useRecoilValue } from "recoil";
 import { userAtom } from "./atoms/userAtom";
 import { UpdateProfilePage } from "./pages/UpdateProfilePage";
 import { UserListPage } from "./pages/AdminPages/UserListPage";
+import { CategoryListPage } from "./pages/AdminPages/CategoryListPage";
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -25,6 +26,12 @@ function App() {
           path="/userlist"
           element={
             user && user.isAdmin ? <UserListPage /> : <Navigate to={"/"} />
+          }
+        />
+        <Route
+          path="/categorylist"
+          element={
+            user && user.isAdmin ? <CategoryListPage /> : <Navigate to={"/"} />
           }
         />
       </Routes>

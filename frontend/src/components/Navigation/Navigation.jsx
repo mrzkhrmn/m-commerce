@@ -115,9 +115,9 @@ export const Navigation = () => {
                 <RouterLink to={"/userlist"}>
                   <MenuItem>User List</MenuItem>
                 </RouterLink>
-                <MenuItem>
-                  <RouterLink>Category List</RouterLink>
-                </MenuItem>
+                <RouterLink to={"/categorylist"}>
+                  <MenuItem>Category List</MenuItem>
+                </RouterLink>
               </MenuList>
             </Menu>
           )}

@@ -86,7 +86,7 @@ export const UserListItem = ({ user }) => {
         <Td>{user.username}</Td>
         <Td>{user.email}</Td>
         <Td>{user.isAdmin ? "✅" : "❌"}</Td>
-        <Td>{user.createdAt}</Td>
+        <Td>{user.createdAt.slice(0, 10)}</Td>
         <Td>
           {user.isAdmin ? (
             <Text>Cant handle with admins.</Text>

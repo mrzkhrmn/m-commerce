@@ -13,7 +13,7 @@ export const createCategory = async (req, res) => {
     const newCategory = new Category({ name });
     await newCategory.save();
 
-    res.status(201).json({ name: newCategory.name });
+    res.status(201).json({ name: newCategory.name, _id: newCategory._id });
   } catch (error) {
     res.status(500).json({ error });
     console.log(error);
