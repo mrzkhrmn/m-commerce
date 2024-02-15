@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { FiSearch, FiUser } from "react-icons/fi";
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa";
 import { CartButton } from "./CartButton";
 import { LogoutButton } from "./LogoutButton";
@@ -97,6 +98,29 @@ export const Navigation = () => {
           <RouterLink>
             <CartButton />
           </RouterLink>
+          {user && user.isAdmin && (
+            <Menu>
+              <MenuButton
+                as={Button}
+                backgroundColor={"transparent"}
+                paddingX={2}
+                paddingY={1}
+                fontWeight={"normal"}
+                margin={0}
+                fontSize={"xl"}
+              >
+                <MdOutlineAdminPanelSettings />
+              </MenuButton>
+              <MenuList>
+                <RouterLink to={"/userlist"}>
+                  <MenuItem>User List</MenuItem>
+                </RouterLink>
+                <MenuItem>
+                  <RouterLink>Category List</RouterLink>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          )}
           {user && (
             <RouterLink>
               <LogoutButton />

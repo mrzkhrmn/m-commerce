@@ -216,7 +216,6 @@ export const deleteUserProfileById = async (req, res) => {
       return res.status(400).json({ error: "You cant delete admin user!" });
     } else {
       await User.deleteOne({ _id: user._id });
-      res.cookie("jwt", "", { maxAge: 1 });
       res.status(200).json({ message: "user deleted successfully!" });
     }
   } catch (error) {

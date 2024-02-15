@@ -6,6 +6,7 @@ import { AuthPage } from "./pages/AuthPage";
 import { useRecoilValue } from "recoil";
 import { userAtom } from "./atoms/userAtom";
 import { UpdateProfilePage } from "./pages/UpdateProfilePage";
+import { UserListPage } from "./pages/AdminPages/UserListPage";
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -19,6 +20,13 @@ function App() {
           element={user ? <Navigate to={"/"} /> : <AuthPage />}
         />
         <Route path="/profile" element={<UpdateProfilePage />} />
+
+        <Route
+          path="/userlist"
+          element={
+            user && user.isAdmin ? <UserListPage /> : <Navigate to={"/"} />
+          }
+        />
       </Routes>
     </>
   );

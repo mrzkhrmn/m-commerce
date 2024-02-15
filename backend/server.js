@@ -16,9 +16,9 @@ app.use(cookieParser());
 
 connectDB(process.env.MONGO_URI);
 
-app.use(`/api/user`, userRouter);
-app.use(`/api/category`, categoryRouter);
-
 app.listen(port, () => {
   console.log("server is listening on port: " + port);
 });
+
+app.use(`/api/user`, userRouter);
+app.use(`/api/category`, categoryRouter);
